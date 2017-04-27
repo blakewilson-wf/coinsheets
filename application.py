@@ -32,37 +32,32 @@ class Client:
         t.start()
 
     def set_price_in_sheet(self):
-        while True:
-            time.sleep(5)
+        # Make the request
+        btc_price = self.coinbase_client.get_spot_price(currency_pair='BTC-USD')
+        self.coinbase_client.get_historic_prices()
+        resp = requests.get(url='https://api.coinbase.com/v2/prices/ETH-USD/spot', headers={'Authorization': 'Bearer ' + Configuration().access_token})
+        eth = json.loads(resp.text)
+        eth_price = eth['data']['amount']
 
-            # Make the request
-            btc_price = self.coinbase_client.get_spot_price(currency_pair='BTC-USD')
-            print 'Current bitcoin price in %s: %s' % (self.currency_code, btc_price.amount)
-            self.coinbase_client.get_historic_prices()
-            resp = requests.get(url='https://api.coinbase.com/v2/prices/ETH-USD/spot', headers={'Authorization': 'Bearer ' + Configuration().access_token})
-            eth = json.loads(resp.text)
-            eth_price = eth['data']['amount']
-            print 'Current etherium price in %s: %s' % (self.currency_code, eth_price)
+        # Update the Spreadsheet
+        resp = self.sp_api_client.spreadsheets_spreadsheet_id_sheets_sheet_id_data_put('067474f68bcc4fada0da5b85fe9b6b62',
+            'a47eddaf73b64709a2db2d893e3dfddd',
+            {
+                "values": [
+                    [
+                    "Bitcoin price (in dollars)",
+                    btc_price.amount
+                    ],
+                    ["ETH price (in dollars)",
+                        eth_price]
+                ]
+            }, 'fakekey',
+            region='A1:B2',)
 
-            # Update the Spreadsheet
-            resp = self.sp_api_client.spreadsheets_spreadsheet_id_sheets_sheet_id_data_put('067474f68bcc4fada0da5b85fe9b6b62',
-                'a47eddaf73b64709a2db2d893e3dfddd',
-                {
-                    "values": [
-                        [
-                        "Bitcoin price (in dollars)",
-                        btc_price.amount
-                        ],
-                        ["ETH price (in dollars)",
-                         eth_price]
-                    ]
-                }, 'fakekey',
-                region='A1:B2',)
-
-            print(str(resp))
 
     def set_exchange_rates_in_sheet(self):
         while True:
+            raw_input("Press 'Enter' to refresh exchange rates")
             rates = self.coinbase_client.get_exchange_rates(currency="BTC")
             values = [["BTC Exchange Rates", ""]]
             for k, v in rates["rates"].iteritems():
@@ -75,7 +70,6 @@ class Client:
                         values
                 }, 'fakekey',
                 region='A4:B',)
-            print(str(resp))
 
 if __name__ == "__main__":
     c = Client()
