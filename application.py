@@ -1,4 +1,3 @@
-import urllib2
 import time
 from threading import Timer
 
@@ -6,6 +5,9 @@ from coinbase.wallet.client import Client as CoinbaseClient
 from pyclient.swagger_client.apis.authentication_api import AuthenticationApi
 from pyclient.swagger_client.apis.spreadsheets_api import SpreadsheetsApi
 from pyclient.swagger_client.configuration import Configuration
+
+import requests
+import json
 
 
 class Client:
@@ -32,9 +34,13 @@ class Client:
             time.sleep(5)
 
             # Make the request
-            price = self.coinbase_client.get_spot_price(currency=self.currency_code)
-
-            print 'Current bitcoin price in %s: %s' % (self.currency_code, price.amount)
+            btc_price = self.coinbase_client.get_spot_price(currency_pair='BTC-USD')
+            print 'Current bitcoin price in %s: %s' % (self.currency_code, btc_price.amount)
+            self.coinbase_client.get_historic_prices()
+            resp = requests.get(url='https://api.coinbase.com/v2/prices/ETH-USD/spot', headers={'Authorization': 'Bearer ' + Configuration().access_token})
+            eth = json.loads(resp.text)
+            eth_price = eth['data']['amount']
+            print 'Current etherium price in %s: %s' % (self.currency_code, eth_price)
 
             # Update the Spreadsheet
             resp = self.sp_api_client.spreadsheets_spreadsheet_id_sheets_sheet_id_data_put('067474f68bcc4fada0da5b85fe9b6b62',
@@ -43,8 +49,10 @@ class Client:
                     "values": [
                         [
                         "Bitcoin price (in dollars)",
-                        price.amount
+                        btc_price.amount
                         ],
+                        ["ETH price (in dollars)",
+                         eth_price]
                     ]
                 }, 'fakekey')
 
