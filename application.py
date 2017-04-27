@@ -54,7 +54,8 @@ class Client:
                         ["ETH price (in dollars)",
                          eth_price]
                     ]
-                }, 'fakekey')
+                }, 'fakekey',
+                region='A1:B2',)
 
             print(str(resp))
 
