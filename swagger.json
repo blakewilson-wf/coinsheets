@@ -1,0 +1,1722 @@
+{
+  "basePath": "/v1beta1",
+  "consumes": [
+    "application/json"
+  ],
+  "definitions": {
+    "BearerToken": {
+      "properties": {
+        "access_token": {
+          "type": "string"
+        },
+        "expires_in": {
+          "type": "integer"
+        },
+        "request_id": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "token_type": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "access_token",
+        "expires_in",
+        "scope",
+        "token_type"
+      ],
+      "type": "object"
+    },
+    "EmptyResponse": {
+      "properties": {
+        "message": {
+          "type": "string"
+        },
+        "request_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "request_id"
+      ],
+      "type": "object"
+    },
+    "Error": {
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "field": {
+          "type": "string"
+        },
+        "resource": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "ErrorResponse": {
+      "properties": {
+        "errors": {
+          "description": "A list of errors detailing the resource, field, and error code to aid \nclients in diagnosing problems.\n",
+          "items": {
+            "$ref": "#/definitions/Error"
+          },
+          "type": "array"
+        },
+        "message": {
+          "description": "Human readable description of the response",
+          "type": "string"
+        },
+        "request_id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "NoContent": {
+      "title": "No Content",
+      "type": "object"
+    },
+    "RangeData": {
+      "example": {
+        "calculated_values": [
+          [
+            "Row1-Column1 Calculated",
+            "Row1-Column2 Calculated"
+          ],
+          [
+            "Row2-Column1 Calculated",
+            "Row2-Column2 Calculated"
+          ]
+        ],
+        "range": "A1:B2",
+        "values": [
+          [
+            "Row1-Column1 Data",
+            "Row1-Column2 Data"
+          ],
+          [
+            "Row2-Column1 Data",
+            "Row2-Column2 Data"
+          ]
+        ]
+      },
+      "properties": {
+        "calculated_values": {
+          "description": "Row-major ordered multidimensional array of calculated cell values",
+          "items": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "type": "array"
+        },
+        "range": {
+          "description": "A1 style representation of the Range containing this data",
+          "type": "string"
+        },
+        "values": {
+          "description": "Row-major ordered multidimensional array of raw cell values",
+          "items": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "RangeDataBody": {
+      "example": {
+        "values": [
+          [
+            "Row1-Column1 Data",
+            "Row1-Column2 Data"
+          ],
+          [
+            "Row2-Column1 Data",
+            "Row2-Column2 Data"
+          ]
+        ]
+      },
+      "properties": {
+        "values": {
+          "description": "Row-major ordered multidimensional array of raw cell values",
+          "items": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "RangeDataResponse": {
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/RangeData"
+        },
+        "message": {
+          "description": "Human readable descriptions of the response condition",
+          "type": "string"
+        },
+        "next_url": {
+          "description": "A fully qualified URL, including required query parameters, for the \nnext page of results. If there is no next page to query for, this will \nbe empty.\n",
+          "type": "string"
+        },
+        "page": {
+          "description": "The one based page index that the result corresponds to.\nOnly included during paging.\n",
+          "type": "integer"
+        },
+        "paged_region": {
+          "description": "The entire region that the collection of pages represents. Only included\nduring data paging.\n",
+          "type": "string"
+        },
+        "per_page": {
+          "description": "The maximum number of items in a page. A page is not\nguaranteed to have exactly this many items. Only included during paging.\n",
+          "type": "integer"
+        },
+        "request_id": {
+          "description": "A unique identifier for the request",
+          "type": "string"
+        },
+        "revision": {
+          "description": "The revision number of this spreadsheet",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "Sheet": {
+      "properties": {
+        "id": {
+          "description": "Unique identifier for the sheet",
+          "type": "string"
+        },
+        "index": {
+          "description": "Zero-based index specifying the position of this Sheet in \nrelation to sibling Sheets\n",
+          "type": "integer"
+        },
+        "name": {
+          "description": "Display name for the sheet",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "SheetBody": {
+      "properties": {
+        "index": {
+          "description": "Zero-based index specifying the position of this Sheet in relation to \nsibling Sheets. The special value -1 may be used to position a Sheet at \nthe end of its siblings list in the outline without knowing how many \nSheets are in the list.\n",
+          "format": "int32",
+          "type": "integer"
+        },
+        "name": {
+          "description": "Display name for the Sheet",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "SheetResponse": {
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/Sheet"
+        },
+        "message": {
+          "description": "Human readable descriptions of the response condition",
+          "type": "string"
+        },
+        "request_id": {
+          "description": "A unique identifier for the request",
+          "type": "string"
+        },
+        "revision": {
+          "description": "The revision number of this spreadsheet",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "SheetsResponse": {
+      "properties": {
+        "data": {
+          "items": {
+            "$ref": "#/definitions/Sheet"
+          },
+          "type": "array"
+        },
+        "message": {
+          "description": "Human readable descriptions of the response condition",
+          "type": "string"
+        },
+        "request_id": {
+          "description": "A unique identifier for the request",
+          "type": "string"
+        },
+        "revision": {
+          "description": "The revision number of this spreadsheet",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "Spreadsheet": {
+      "properties": {
+        "created": {
+          "description": "Date-time (UTC) corresponding to the creation of the Spreadsheet",
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "description": "Unique identifier for the Spreadsheet",
+          "type": "string"
+        },
+        "last_modified": {
+          "description": "Date-time (UTC) corresponding to the last modification of the Spreadsheet",
+          "format": "date-time",
+          "type": "string"
+        },
+        "name": {
+          "description": "Display name for the Spreadsheet",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "SpreadsheetBody": {
+      "properties": {
+        "name": {
+          "description": "Display name for the Spreadsheet",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "type": "object"
+    },
+    "SpreadsheetResponse": {
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/Spreadsheet"
+        },
+        "message": {
+          "description": "Human readable descriptions of the response condition",
+          "type": "string"
+        },
+        "request_id": {
+          "description": "A unique identifier for the request",
+          "type": "string"
+        },
+        "revision": {
+          "description": "The revision number of this spreadsheet",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "host": "api.wk-dev.wdesk.org",
+  "info": {
+    "description": "APIs provided for 3rd party integrations. Build: c0ca649",
+    "title": "Workiva Developer API",
+    "version": "0.1.0"
+  },
+  "parameters": {
+    "Accept": {
+      "default": "application/json",
+      "description": "The requested content type. For example, application/json.\nPer the HTTP guidelines, this is just a hint and responses MAY have a \ndifferent content type.\n",
+      "format": "string",
+      "in": "header",
+      "name": "Accept",
+      "type": "string"
+    },
+    "AcceptEncoding": {
+      "default": "gzip",
+      "description": "The requested content encoding for the response. For example, gzip.\n",
+      "format": "string",
+      "in": "header",
+      "name": "Accept-Encoding",
+      "type": "string"
+    },
+    "ClientId": {
+      "description": "The users client id.",
+      "in": "formData",
+      "name": "client_id",
+      "required": true,
+      "type": "string"
+    },
+    "ClientSecret": {
+      "description": "The users client secret.",
+      "in": "formData",
+      "name": "client_secret",
+      "required": true,
+      "type": "string"
+    },
+    "ContentType": {
+      "default": "application/json",
+      "description": "Mime type of request body.",
+      "in": "header",
+      "name": "Content-Type",
+      "type": "string"
+    },
+    "Cursor": {
+      "description": "Opaque cursor used for paging through a list of items. Must not be \nchanged between paging requests.\n",
+      "in": "query",
+      "name": "cursor",
+      "type": "string"
+    },
+    "Date": {
+      "description": "Timestamp of the request, based on the client's clock, in RFC 5322 date \nand time format. For example, Wed, 24 Aug 2016 18:41:30 GMT.\n",
+      "in": "header",
+      "name": "Date",
+      "type": "string"
+    },
+    "GrantType": {
+      "description": "The grant type for the Bearer token. Must be client_credentials.",
+      "format": "^client_credentials$",
+      "in": "formData",
+      "name": "grant_type",
+      "required": true,
+      "type": "string"
+    },
+    "IfMatch": {
+      "description": "The If-Match request-header field is used with a method to make it \nconditional. If-Match headers let you ensure your app alters data only\nif you have the current version.\n",
+      "in": "header",
+      "name": "If-Match",
+      "type": "string"
+    },
+    "IfNoneMatch": {
+      "description": "The If-None-Match request-header field is used with a method to make it \nconditional. If-None-Match headers ensure that you don't retrieve \nunnecessary data if you already have the most current version on-hand.\n",
+      "in": "header",
+      "name": "If-None-Match",
+      "type": "string"
+    },
+    "Page": {
+      "description": "The page of results to return.\n",
+      "format": "int32",
+      "in": "query",
+      "name": "page",
+      "type": "integer"
+    },
+    "PerPage": {
+      "description": "The number of items to return per page. Leave blank for no limit,\nreturning all results.\n",
+      "format": "int32",
+      "in": "query",
+      "name": "per_page",
+      "type": "integer"
+    },
+    "RangeDataBodyParameter": {
+      "description": "Multidimensional array of cell values in row-major order. The `null` JSON value may be used to avoid modifying a cell.",
+      "in": "body",
+      "name": "RangeDataBodyParameter",
+      "required": true,
+      "schema": {
+        "$ref": "#/definitions/RangeDataBody"
+      }
+    },
+    "Region": {
+      "description": "A1 style representation of a Cell or Range. The Range may be unbounded in \nany/all directions. \nFor example:\n* The (entirely bounded) Range \"A2:D8\" will select all data in the Range between A2 and D8 (inclusive)\n* The (unbounded in rows) Range \"A:A\" will select all data in column A\n* The (unbounded in stop coordinates) Range \"B3:\" will select all data below and to the right of B3 (inclusive)\n\nIf no region is provided, all data in the sheet will be selected.\n",
+      "in": "query",
+      "name": "region",
+      "pattern": "^[a-zA-Z]*(?:[1-9][0-9]*)?(?:\\:[a-zA-Z]*(?:[1-9][0-9]*)?)?$",
+      "type": "string"
+    },
+    "Revision": {
+      "description": "The Spreadsheet revision from which to select data. If no revision is \nprovided, the latest revision will be selected.\n",
+      "format": "int32",
+      "in": "query",
+      "name": "revision",
+      "type": "integer"
+    },
+    "SheetBodyParameter": {
+      "description": "Properties for creating a new sheet",
+      "in": "body",
+      "name": "SheetBodyParameter",
+      "required": true,
+      "schema": {
+        "$ref": "#/definitions/SheetBody"
+      }
+    },
+    "SheetId": {
+      "description": "A unique identifier for a sheet within a spreadsheet",
+      "in": "path",
+      "name": "SheetId",
+      "required": true,
+      "type": "string"
+    },
+    "SpreadsheetBodyParameter": {
+      "description": "Properties for creating a new spreadsheet",
+      "in": "body",
+      "name": "SpreadsheetBodyParameter",
+      "required": true,
+      "schema": {
+        "$ref": "#/definitions/SpreadsheetBody"
+      }
+    },
+    "SpreadsheetId": {
+      "description": "A unique identifier for a spreadsheet",
+      "in": "path",
+      "name": "SpreadsheetId",
+      "required": true,
+      "type": "string"
+    },
+    "XApiKey": {
+      "description": "API callers are identified by API keys. Throttling and request quota limits are set for each individual API key. \n",
+      "in": "header",
+      "name": "X-Api-Key",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "paths": {
+    "/oauth2/token": {
+      "post": {
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "description": "Given a valid client_id and client_secret, create a bearer token\nfor the current user.\n",
+        "operationId": "oauth2TokenPost",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ContentType"
+          },
+          {
+            "$ref": "#/parameters/Accept"
+          },
+          {
+            "$ref": "#/parameters/ClientId"
+          },
+          {
+            "$ref": "#/parameters/ClientSecret"
+          },
+          {
+            "$ref": "#/parameters/GrantType"
+          },
+          {
+            "$ref": "#/parameters/XApiKey"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "ETag": {
+                "description": "The ETag HTTP response header is an identifier for a specific version of a resource.",
+                "type": "string"
+              },
+              "Expires": {
+                "description": "The Expires header contains the date/time after which the response is considered stale.",
+                "type": "string"
+              },
+              "Last-Modified": {
+                "description": "The Last-Modified response HTTP header contains the date and time at which the origin server believes the resource was last modified.",
+                "type": "string"
+              },
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/BearerToken"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {
+              "ETag": {
+                "description": "The ETag HTTP response header is an identifier for a specific version of a resource.",
+                "type": "string"
+              },
+              "Expires": {
+                "description": "The Expires header contains the date/time after which the response is considered stale.",
+                "type": "string"
+              },
+              "Last-Modified": {
+                "description": "The Last-Modified response HTTP header contains the date and time at which the origin server believes the resource was last modified.",
+                "type": "string"
+              },
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "summary": "Create an OAuth bearer token.",
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/spreadsheets": {
+      "post": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/SpreadsheetBodyParameter"
+          },
+          {
+            "$ref": "#/parameters/XApiKey"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/SpreadsheetResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth": [
+              "data_tables|w"
+            ]
+          }
+        ],
+        "summary": "Create a new spreadsheet.",
+        "tags": [
+          "Spreadsheets"
+        ]
+      }
+    },
+    "/spreadsheets/{SpreadsheetId}": {
+      "delete": {
+        "description": "Deletes an existing spreadsheet.\n",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SpreadsheetId"
+          },
+          {
+            "$ref": "#/parameters/XApiKey"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/EmptyResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth": [
+              "data_tables|w"
+            ]
+          }
+        ],
+        "summary": "Delete a Spreadsheet",
+        "tags": [
+          "Spreadsheets"
+        ]
+      },
+      "get": {
+        "description": "Gets an existing spreadsheet given a spreadsheet id.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SpreadsheetId"
+          },
+          {
+            "$ref": "#/parameters/Revision"
+          },
+          {
+            "$ref": "#/parameters/XApiKey"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/SpreadsheetResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth": [
+              "data_tables|r"
+            ]
+          }
+        ],
+        "summary": "Retrieve a Spreadsheet",
+        "tags": [
+          "Spreadsheets"
+        ]
+      },
+      "put": {
+        "description": "Updates a Spreadsheet using the given Spreadsheet properties. If any \nproperty is null or not included in the request the property will not \nbe modified.\n",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SpreadsheetId"
+          },
+          {
+            "$ref": "#/parameters/SpreadsheetBodyParameter"
+          },
+          {
+            "$ref": "#/parameters/XApiKey"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/EmptyResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth": [
+              "data_tables|w"
+            ]
+          }
+        ],
+        "summary": "Update a Spreadsheet",
+        "tags": [
+          "Spreadsheets"
+        ]
+      }
+    },
+    "/spreadsheets/{SpreadsheetId}/sheets": {
+      "get": {
+        "description": "Retrieves all Sheets in the outline",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SpreadsheetId"
+          },
+          {
+            "$ref": "#/parameters/Revision"
+          },
+          {
+            "$ref": "#/parameters/XApiKey"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/SheetsResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth": [
+              "data_tables|r"
+            ]
+          }
+        ],
+        "summary": "Get a list of sheets",
+        "tags": [
+          "Spreadsheets"
+        ]
+      },
+      "post": {
+        "description": "Creates a new sheet within the current spreadsheet.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SpreadsheetId"
+          },
+          {
+            "$ref": "#/parameters/SheetBodyParameter"
+          },
+          {
+            "$ref": "#/parameters/XApiKey"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/SheetResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth": [
+              "data_tables|w"
+            ]
+          }
+        ],
+        "summary": "Creates a new Sheet",
+        "tags": [
+          "Spreadsheets"
+        ]
+      }
+    },
+    "/spreadsheets/{SpreadsheetId}/sheets/{SheetId}": {
+      "delete": {
+        "description": "Deletes the identified sheet.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SpreadsheetId"
+          },
+          {
+            "$ref": "#/parameters/SheetId"
+          },
+          {
+            "$ref": "#/parameters/XApiKey"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/EmptyResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth": [
+              "data_tables|w"
+            ]
+          }
+        ],
+        "summary": "Deletes a Sheet.",
+        "tags": [
+          "Spreadsheets"
+        ]
+      },
+      "get": {
+        "description": "Retrieves a sheet from the identified spreadsheet",
+        "parameters": [
+          {
+            "$ref": "#/parameters/Revision"
+          },
+          {
+            "$ref": "#/parameters/SpreadsheetId"
+          },
+          {
+            "$ref": "#/parameters/SheetId"
+          },
+          {
+            "$ref": "#/parameters/XApiKey"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/SheetResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth": [
+              "data_tables|r"
+            ]
+          }
+        ],
+        "summary": "Retrieve a Sheet",
+        "tags": [
+          "Spreadsheets"
+        ]
+      },
+      "put": {
+        "description": "Updates a Sheet using the given Sheet properties. If any property is \nset to the null JSON value or not included in the request the property \nwill not be modified.\n",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SpreadsheetId"
+          },
+          {
+            "$ref": "#/parameters/SheetId"
+          },
+          {
+            "$ref": "#/parameters/SheetBodyParameter"
+          },
+          {
+            "$ref": "#/parameters/XApiKey"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/EmptyResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth": [
+              "data_tables|w"
+            ]
+          }
+        ],
+        "summary": "Updates a Sheet",
+        "tags": [
+          "Spreadsheets"
+        ]
+      }
+    },
+    "/spreadsheets/{SpreadsheetId}/sheets/{SheetId}/data": {
+      "get": {
+        "description": "Retrieves all data in a region, paging if necessary. \n\nWhen paging, the revision parameter must be set and the per_page parameter indicates the \nmaximum number of cells to include in a single response. The server enforces a maximum \nper_page of 50,000. An unbounded region may only be used to obtain the first page of \nresults. Use the paged_region or next_url from the first page to retrieve \nsubsequent pages. All cells in the requested region will appear exactly once during the \npaging process, however ordering is not guaranteed.\n",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SpreadsheetId"
+          },
+          {
+            "$ref": "#/parameters/SheetId"
+          },
+          {
+            "$ref": "#/parameters/Revision"
+          },
+          {
+            "$ref": "#/parameters/Region"
+          },
+          {
+            "$ref": "#/parameters/Page"
+          },
+          {
+            "$ref": "#/parameters/PerPage"
+          },
+          {
+            "$ref": "#/parameters/XApiKey"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/RangeDataResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth": [
+              "data_tables|r"
+            ]
+          }
+        ],
+        "summary": "Retrieves data in a Region",
+        "tags": [
+          "Spreadsheets"
+        ]
+      },
+      "put": {
+        "description": "Overwrites all data in a region with new data. If the provided\nRangeData is smaller than the specified Region, all cells in the\nRegion and not covered by the RangeData will be cleared. The provided\nRangeData must not be larger than the specified Region. An empty\nRangeData is valid and may be used to clear a Region.'\n",
+        "parameters": [
+          {
+            "$ref": "#/parameters/SpreadsheetId"
+          },
+          {
+            "$ref": "#/parameters/SheetId"
+          },
+          {
+            "$ref": "#/parameters/Region"
+          },
+          {
+            "$ref": "#/parameters/RangeDataBodyParameter"
+          },
+          {
+            "$ref": "#/parameters/XApiKey"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/EmptyResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Correlates HTTP requests between a client and server.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth": [
+              "data_tables|w"
+            ]
+          }
+        ],
+        "summary": "Writes data in a Region",
+        "tags": [
+          "Spreadsheets"
+        ]
+      }
+    }
+  },
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "https"
+  ],
+  "securityDefinitions": {
+    "oauth": {
+      "flow": "application",
+      "scopes": {
+        "data_tables|r": "Read spreadsheets data.",
+        "data_tables|w": "Write spreadsheets data."
+      },
+      "tokenUrl": "https://api.wk-dev.wdesk.org/v1beta1/oauth2/token",
+      "type": "oauth2"
+    }
+  },
+  "swagger": "2.0"
+}
