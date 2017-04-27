@@ -59,6 +59,22 @@ class Client:
 
             print(str(resp))
 
+    def set_exchange_rates_in_sheet(self):
+        rates = self.coinbase_client.get_exchange_rates(currency="BTC")
+        values = [["BTC Exchange Rates", ""]]
+        for k, v in rates["rates"].iteritems():
+            values.append([k, v])
+        # Update the Spreadsheet
+        resp = self.sp_api_client.spreadsheets_spreadsheet_id_sheets_sheet_id_data_put('067474f68bcc4fada0da5b85fe9b6b62',
+            'a47eddaf73b64709a2db2d893e3dfddd',
+            {
+                "values":
+                    values
+            }, 'fakekey',
+            region='A4:B',)
+        print(str(resp))
+
 if __name__ == "__main__":
     c = Client()
+    c.set_exchange_rates_in_sheet()
     c.set_price_in_sheet()
