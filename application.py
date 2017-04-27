@@ -1,5 +1,5 @@
 import time
-from threading import Timer
+import threading
 
 from coinbase.wallet.client import Client as CoinbaseClient
 from pyclient.swagger_client.apis.authentication_api import AuthenticationApi
@@ -18,6 +18,8 @@ class Client:
         self.sp_api_client = SpreadsheetsApi()
         self.auth_api_client = AuthenticationApi()
         self._set_token()
+        self.wb = '067474f68bcc4fada0da5b85fe9b6b62'
+        self.tb = 'a47eddaf73b64709a2db2d893e3dfddd'
 
     def _set_token(self):
         Configuration().access_token = self.auth_api_client.oauth2_token_post(client_id='04fffc2536fa4978808ac680dbbecacc',
@@ -25,7 +27,7 @@ class Client:
                                                                               client_secret='4e8ecf9b8d20504352b7539dc0a664095ed52a80ff8517a0',
                                                                               grant_type='client_credentials').access_token
         # Renew token every minute
-        t = Timer(60.0, self._set_token)
+        t = threading.Timer(60.0, self._set_token)
         t.daemon = True
         t.start()
 
@@ -60,21 +62,24 @@ class Client:
             print(str(resp))
 
     def set_exchange_rates_in_sheet(self):
-        rates = self.coinbase_client.get_exchange_rates(currency="BTC")
-        values = [["BTC Exchange Rates", ""]]
-        for k, v in rates["rates"].iteritems():
-            values.append([k, v])
-        # Update the Spreadsheet
-        resp = self.sp_api_client.spreadsheets_spreadsheet_id_sheets_sheet_id_data_put('067474f68bcc4fada0da5b85fe9b6b62',
-            'a47eddaf73b64709a2db2d893e3dfddd',
-            {
-                "values":
-                    values
-            }, 'fakekey',
-            region='A4:B',)
-        print(str(resp))
+        while True:
+            rates = self.coinbase_client.get_exchange_rates(currency="BTC")
+            values = [["BTC Exchange Rates", ""]]
+            for k, v in rates["rates"].iteritems():
+                values.append([k, v])
+            # Update the Spreadsheet
+            resp = self.sp_api_client.spreadsheets_spreadsheet_id_sheets_sheet_id_data_put('067474f68bcc4fada0da5b85fe9b6b62',
+                'a47eddaf73b64709a2db2d893e3dfddd',
+                {
+                    "values":
+                        values
+                }, 'fakekey',
+                region='A4:B',)
+            print(str(resp))
 
 if __name__ == "__main__":
     c = Client()
-    c.set_exchange_rates_in_sheet()
-    c.set_price_in_sheet()
+    thr = threading.Thread(target=c.set_price_in_sheet, kwargs={})
+    thr.start()
+    thr = threading.Thread(target=c.set_exchange_rates_in_sheet, kwargs={})
+    thr.start()
